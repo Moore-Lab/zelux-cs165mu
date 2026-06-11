@@ -1,0 +1,5 @@
+# NOTE: thorlabs_tsi_sdk is NOT on PyPI — install it from the Thorlabs
+# Scientific Camera SDK / ThorCam package and ensure the native DLLs are on PATH.
+numpy
+# GUI / preview (framework TBD during planning)
+opencv-python
