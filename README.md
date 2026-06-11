@@ -28,5 +28,5 @@ pip install -r requirements.txt   # numpy + GUI deps; the TSI SDK is installed s
 
 ## Status
 
-Scaffolding only — interface stubs in place, implementation pending. See the development
-plan in the parent `xsphere-daq` repo.
+Scaffolding only — interface stubs in place, implementation pending. Development is
+tracked in [`docs/session-log.md`](docs/session-log.md).
