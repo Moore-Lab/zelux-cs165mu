@@ -13,6 +13,19 @@ See the [README](../README.md) for goals and backend setup.
 
 ---
 
+## 2026-06-12 — No-drop start(); GUI is now a shared shell
+
+- `start(max_throughput=False)` added: `True` arms a deeper frame buffer (20 vs 2) so
+  brief consumer stalls don't drop frames during full-rate recording. The Zelux FIFO
+  poll is already no-drop in order; the deeper buffer just adds slack. Used by the
+  dock's `AcquisitionEngine`.
+- `gui.py` reduced to a **thin shell** over `camera_dock.preview.run(ZeluxCS165MU())` —
+  GUI logic lives once in the dock. The shared harness handles the 16-bit frames via
+  the driver's `bit_depth` (8-bit preview/video, 16-bit snapshots). Driver still never
+  imports the dock; only the GUI shell does.
+- Validated through the shared engine: **34.8 fps** acquisition while recording, 70/70
+  frames, **0 dropped**, uint16→8-bit encode correct (see the dock log for Stage 1).
+
 ## 2026-06-11 — Hardware validation PASS; SDK installed
 
 **Context.** Resolved the wheel blocker and validated against the real camera.

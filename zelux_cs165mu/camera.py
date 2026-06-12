@@ -217,12 +217,18 @@ class ZeluxCS165MU:
         return measured if measured > 0 else self.get_frame_rate()
 
     # --- acquisition -------------------------------------------------------
-    def start(self) -> None:
-        """Begin continuous grabbing (arm + one software trigger)."""
+    def start(self, max_throughput: bool = False) -> None:
+        """Begin continuous grabbing (arm + one software trigger).
+
+        ``max_throughput=True`` arms a deeper frame buffer so brief consumer
+        stalls don't drop frames — for recording at the full data rate. The Zelux
+        FIFO poll (``get_pending_frame_or_null``) is already no-drop in order; the
+        deeper buffer just adds slack.
+        """
         cam = self._require()
         if not cam.is_armed:
             cam.frames_per_trigger_zero_for_unlimited = 0
-            cam.arm(2)
+            cam.arm(20 if max_throughput else 2)
             cam.issue_software_trigger()
 
     def stop(self) -> None:
