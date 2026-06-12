@@ -216,6 +216,30 @@ class ZeluxCS165MU:
             measured = 0.0
         return measured if measured > 0 else self.get_frame_rate()
 
+    # --- gain --------------------------------------------------------------
+    def set_gain(self, value: float) -> None:
+        """Set gain in the camera's native (integer index) units."""
+        cam = self._require()
+        rng = cam.gain_range
+        if rng.max <= rng.min:
+            return  # gain not supported on this model
+        cam.gain = int(round(min(max(value, rng.min), rng.max)))
+
+    def get_gain(self) -> float:
+        return float(self._require().gain)
+
+    def gain_range(self) -> Tuple[float, float]:
+        """``(min, max)`` gain index; ``(0, 0)`` if gain is unsupported."""
+        rng = self._require().gain_range
+        return (float(rng.min), float(rng.max))
+
+    def gain_to_db(self, gain: float) -> float:
+        """Convert a native gain index to decibels (for display)."""
+        try:
+            return float(self._require().convert_gain_to_decibels(int(round(gain))))
+        except Exception:
+            return 0.0
+
     # --- acquisition -------------------------------------------------------
     def start(self, max_throughput: bool = False) -> None:
         """Begin continuous grabbing (arm + one software trigger).

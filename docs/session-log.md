@@ -13,6 +13,13 @@ See the [README](../README.md) for goals and backend setup.
 
 ---
 
+## 2026-06-12 — Gain control (Stage 2 Round A)
+
+- Added `set_gain` / `get_gain` / `gain_range` (native integer index) plus `gain_to_db`
+  for display. Validated: range **0–480 index (0–48 dB)**, set/get/convert correct.
+- Histogram, auto-exposure, snapshot formats (incl. 16-bit TIFF), and numeric entry are
+  camera-agnostic and live in the dock (see the dock log). ROI/binning come in Round B.
+
 ## 2026-06-12 — No-drop start(); GUI is now a shared shell
 
 - `start(max_throughput=False)` added: `True` arms a deeper frame buffer (20 vs 2) so
