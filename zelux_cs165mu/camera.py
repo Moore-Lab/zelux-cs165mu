@@ -240,6 +240,57 @@ class ZeluxCS165MU:
         except Exception:
             return 0.0
 
+    # --- region of interest / binning --------------------------------------
+    # ROI is expressed uniformly as (offset_x, offset_y, width, height); the TSI
+    # SDK uses corner coordinates (ROI namedtuple). Set while disarmed.
+    def roi_range(self) -> dict:
+        cam = self._require()
+        return {
+            "w_min": 32, "w_max": int(cam.sensor_width_pixels), "w_inc": 2,
+            "h_min": 32, "h_max": int(cam.sensor_height_pixels), "h_inc": 2,
+            "x_inc": 2, "y_inc": 2,
+        }
+
+    def set_roi(self, x: int, y: int, w: int, h: int) -> None:
+        cam = self._require()
+        if cam.is_armed:
+            cam.disarm()
+        sw, sh = int(cam.sensor_width_pixels), int(cam.sensor_height_pixels)
+        ulx = max(0, min(int(x), sw - 2))
+        uly = max(0, min(int(y), sh - 2))
+        lrx = max(ulx + 1, min(int(x + w - 1), sw - 1))
+        lry = max(uly + 1, min(int(y + h - 1), sh - 1))
+        roi_type = type(cam.roi)
+        cam.roi = roi_type(ulx, uly, lrx, lry)
+
+    def get_roi(self) -> Tuple[int, int, int, int]:
+        r = self._require().roi
+        return (int(r.upper_left_x_pixels), int(r.upper_left_y_pixels),
+                int(r.lower_right_x_pixels - r.upper_left_x_pixels + 1),
+                int(r.lower_right_y_pixels - r.upper_left_y_pixels + 1))
+
+    def reset_roi(self) -> None:
+        cam = self._require()
+        if cam.is_armed:
+            cam.disarm()
+        roi_type = type(cam.roi)
+        cam.roi = roi_type(0, 0, int(cam.sensor_width_pixels) - 1, int(cam.sensor_height_pixels) - 1)
+
+    def binning_range(self) -> Tuple[int, int]:
+        cam = self._require()
+        return (int(cam.binx_range.max), int(cam.biny_range.max))
+
+    def set_binning(self, bx: int, by: int) -> None:
+        cam = self._require()
+        if cam.is_armed:
+            cam.disarm()
+        cam.binx = int(min(max(bx, cam.binx_range.min), cam.binx_range.max))
+        cam.biny = int(min(max(by, cam.biny_range.min), cam.biny_range.max))
+
+    def get_binning(self) -> Tuple[int, int]:
+        cam = self._require()
+        return (int(cam.binx), int(cam.biny))
+
     # --- acquisition -------------------------------------------------------
     def start(self, max_throughput: bool = False) -> None:
         """Begin continuous grabbing (arm + one software trigger).

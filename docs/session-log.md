@@ -13,6 +13,15 @@ See the [README](../README.md) for goals and backend setup.
 
 ---
 
+## 2026-06-12 — ROI / binning (Stage 2 Round B)
+
+- Added `roi_range` / `set_roi` / `get_roi` / `reset_roi` (uniform (x,y,w,h), translated
+  to the TSI `ROI` corner namedtuple) and `binning_range` / `set_binning` /
+  `get_binning` (binx/biny). Set while disarmed (defensive `disarm()` plus the dock
+  stops the engine first).
+- Validated: ROI snaps to even boundaries (720×540 @ y270 → 720×544 @ y268), frames grab
+  at the new size; binning to 16×16; reset restores 1440×1080.
+
 ## 2026-06-12 — Gain control (Stage 2 Round A)
 
 - Added `set_gain` / `get_gain` / `gain_range` (native integer index) plus `gain_to_db`
