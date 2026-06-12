@@ -28,5 +28,7 @@ pip install -r requirements.txt   # numpy + GUI deps; the TSI SDK is installed s
 
 ## Status
 
-Scaffolding only — interface stubs in place, implementation pending. Development is
-tracked in [`docs/session-log.md`](docs/session-log.md).
+Driver + test GUI implemented (mirrors `basler-acA1440`, conforms to the dock's
+`CameraBase`). **Hardware validation pending the `thorlabs_tsi_sdk` wheel** — the camera
+and native DLLs are present, only the Python wrapper needs installing (see Backend).
+Development is tracked in [`docs/session-log.md`](docs/session-log.md).

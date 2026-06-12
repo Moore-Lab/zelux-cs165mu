@@ -1,5 +1,7 @@
-# NOTE: thorlabs_tsi_sdk is NOT on PyPI — install it from the Thorlabs
-# Scientific Camera SDK / ThorCam package and ensure the native DLLs are on PATH.
+# NOTE: thorlabs_tsi_sdk is NOT on PyPI — install the wheel from the Thorlabs
+# Scientific Camera SDK ("Python Toolkit"). The native DLLs ship with ThorCam;
+# the driver adds their directory to the DLL search path automatically (default
+# the ThorCam install dir, or set THORLABS_TSI_DLL_DIR).
 numpy
-# GUI / preview (framework TBD during planning)
+# GUI / preview (OpenCV highgui test harness; production UI is the dock web app)
 opencv-python
