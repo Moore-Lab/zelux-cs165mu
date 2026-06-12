@@ -203,15 +203,18 @@ class ZeluxCS165MU:
         return float(rng.min), float(rng.max)
 
     def resulting_frame_rate(self) -> float:
-        """Frame rate actually delivered to the host (measured by the SDK).
+        """Best estimate of the achievable/actual frame rate, in fps.
 
-        Unlike the Basler ``ResultingFrameRate`` estimate, this is a *live*
-        measurement: it reads ~0 until acquisition is running.
+        Prefers the SDK's live measurement (``get_measured_frame_rate_fps``).
+        That call returns 0 on some units/firmware (observed on CS165MU s/n 32943
+        with SDK 0.0.8, even mid-stream), so when it reports <= 0 we fall back to
+        the target rate — mirroring the Basler driver, where this never reads 0.
         """
         try:
-            return float(self._require().get_measured_frame_rate_fps())
+            measured = float(self._require().get_measured_frame_rate_fps())
         except Exception:
-            return 0.0
+            measured = 0.0
+        return measured if measured > 0 else self.get_frame_rate()
 
     # --- acquisition -------------------------------------------------------
     def start(self) -> None:

@@ -29,6 +29,7 @@ pip install -r requirements.txt   # numpy + GUI deps; the TSI SDK is installed s
 ## Status
 
 Driver + test GUI implemented (mirrors `basler-acA1440`, conforms to the dock's
-`CameraBase`). **Hardware validation pending the `thorlabs_tsi_sdk` wheel** — the camera
-and native DLLs are present, only the Python wrapper needs installing (see Backend).
-Development is tracked in [`docs/session-log.md`](docs/session-log.md).
+`CameraBase`) and **hardware-validated** against a CS165MU (s/n 32943): smoke test
+29.5 fps @ 30 target, full-frame max 34.6 fps, 16-bit TIFF snapshot + AVI record paths
+verified. Only the live preview window is unexercised (needs a desktop). Development is
+tracked in [`docs/session-log.md`](docs/session-log.md).
